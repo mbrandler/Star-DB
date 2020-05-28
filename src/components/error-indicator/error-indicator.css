@@ -3,3 +3,8 @@
     text-align: center;
     color: darkorange;
 }
+
+.error-indicator img {
+    margin: 1rem 0;
+}
+
