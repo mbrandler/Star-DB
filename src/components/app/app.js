@@ -1,32 +1,23 @@
 import React, { Component } from "react";
-
-import Header from "../header/header";
+import { BrowserRouter as Router, Route } from "react-router-dom";
 
 import './app.css';
+
+import Header from "../header/header";
 import RandomPlanet from "../random-planet/random-planet";
-// import PeoplePage from "../people-page";
-// import ItemList from "../item-list";
-import ItemDetails from "../item-details";
-import SwapiService from "../../services/swapi-service";
-// import ErrorButton from "../error-button";
 import ErrorBoundary from "../error-boundary/error-boundary";
-import Row from "../row/row";
+import SwapiService from "../../services/swapi-service";
+import { PeoplePage, PlanetsPage, StarshipsPage } from "../pages";
+
+import { SwapiServiceProvider } from "../swapi-service-context";
+import StarshipDetails from "../sw-components/starship-details";
 
 export default class App extends  Component {
 
     swapiService = new SwapiService();
 
     state = {
-        showRandomPlanet: true,
         hasError: false
-    };
-
-    toogleRandomPlanet = () => {
-        this.setState((state) => {
-            return {
-                showRandomPlanet: !state.showRandomPlanet
-            }
-        })
     };
 
     componentDidCatch(error, info) {
@@ -35,75 +26,30 @@ export default class App extends  Component {
 
     render() {
 
-        const planet = this.state.showRandomPlanet ? <RandomPlanet /> : null;
-
-        const { getPerson, getStarship, getPersonImage, getStarshipImage } = this.swapiService;
-
-        const personDetails = (
-            <ItemDetails
-                itemId={11}
-                getData={ getPerson }
-                getImageUrl={getPersonImage} />
-        );
-
-        const starshipDetails = (
-            <ItemDetails
-                itemId={5}
-                getData={ getStarship }
-                getImageUrl={getStarshipImage}  />
-        );
-
         return (
             <ErrorBoundary>
-                <div className="app">
-                    <Header />
-                    {/*{ planet }*/}
+                <SwapiServiceProvider value={this.swapiService}>
+                    <Router>
+                        <div className="app">
+                            <Header />
+                            <RandomPlanet />
 
-                    {/*<div className="row mb2 button-row">*/}
-                    {/*    <button*/}
-                    {/*        className="toggle-planet btn btn-warning btn-lg"*/}
-                    {/*        onClick={this.toogleRandomPlanet}>*/}
-                    {/*        Toggle Random Planet*/}
-                    {/*    </button>*/}
-                    {/*    <ErrorButton />*/}
-                    {/*</div>*/}
+                            <Route path="/" render={() => <h2>Welcome to StarDB</h2>}
+                                   exact />
+                            <Route path="/people" component={PeoplePage} />
+                            <Route path="/planets" component={PlanetsPage} />
+                            <Route path="/starships" exact component={StarshipsPage} />
+                            <Route path="/starships/:id"
+                                   render={({ match }) => {
+                                       const { id } = match.params;
+                                       return <StarshipDetails itemId={id} />
+                                   }} />
 
-                    {/*<PeoplePage />*/}
-
-                    {/*<div className="row mb2">*/}
-                    {/*    <div className="col-md-6">*/}
-                    {/*        <ItemList*/}
-                    {/*            onItemSelected={this.onPersonSelected}*/}
-                    {/*            getData={this.swapiService.getAllPlanets}>*/}
-                    {/*            {(item) => item.name}*/}
-                    {/*        </ItemList>*/}
-                    {/*    </div>*/}
-                    {/*    <div className="col-md-6">*/}
-                    {/*        <ItemDetails personId ={this.state.selectedPerson} />*/}
-                    {/*    </div>*/}
-                    {/*</div>*/}
-
-                    {/*<div className="row mb2">*/}
-                    {/*    <div className="col-md-6">*/}
-                    {/*        <ItemList*/}
-                    {/*            onItemSelected={this.onPersonSelected}*/}
-                    {/*            getData={this.swapiService.getAllStarships}>*/}
-                    {/*            {(item) => item.name}*/}
-                    {/*        </ItemList>*/}
-                    {/*    </div>*/}
-                    {/*    <div className="col-md-6">*/}
-                    {/*        <ItemDetails personId ={this.state.selectedPerson} />*/}
-                    {/*    </div>*/}
-                    {/*</div>*/}
-
-
-                    <Row
-                        left={personDetails}
-                        right={starshipDetails} />
-
-                </div>
+                        </div>
+                    </Router>
+                </SwapiServiceProvider>
             </ErrorBoundary>
-        )
+        );
     }
 };
 
