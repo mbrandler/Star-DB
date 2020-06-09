@@ -1,6 +1,12 @@
 ## [Star-DB](https://mbrandler.github.io/Star-DB)
 
-React course project.
+React course project. 
+
+Create with
+
+- [swapi.dev](https://swapi.dev/)
+- [starwars-visualguide](https://starwars-visualguide.com/)
+- [bootswatch.com/darkly](https://bootswatch.com/darkly/)
 
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
