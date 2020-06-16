@@ -1,4 +1,6 @@
-## [Star-DB](https://mbrandler.github.io/Star-DB)
+## Star-DB
+
+[Demo](https://mbrandler.github.io/Star-DB)
 
 React course project. 
 
